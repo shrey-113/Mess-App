@@ -1,97 +1,58 @@
-import React, { useState } from "react";
+import React from "react";
 import "../assets/css/styles.css";
 
 const IndexScreen = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    password: "",
-  });
+  const client_id = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+  const redirect_url = process.env.REACT_APP_GOOGLE_OAUTH_REDIRECT_URL;
 
-  const [showPassword, setShowPassword] = useState(false);
+  const handleGoogleSignIn = () => {
+    // Implement Google sign-in logic here
+    const scopes = [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ];
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
+    const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=${encodeURIComponent(
+      scopes.join(" ")
+    )}&response_type=code&redirect_uri=${encodeURIComponent(
+      redirect_url
+    )}&client_id=${encodeURIComponent(
+      client_id
+    )}&access_type=offline&prompt=consent`;
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    console.log(formData);
+    window.location.href = authUrl;
   };
 
   return (
     <div className="container">
       <div className="login">
         <div className="login__content">
-          <form className="login__form" onSubmit={handleSubmit}>
+          <form className="login__form">
             <div>
               <h1 className="login__title">
                 <span>Welcome</span>
               </h1>
               <p className="login__description">
-                Please login to place an order for milk and curd.
+                Please login with your institute email ID to place an order for
+                milk and curd.
               </p>
-            </div>
-
-            <div className="login__inputs">
-              <div>
-                <label htmlFor="username" className="login__label">
-                  Registration Number
-                </label>
-                <input
-                  className="login__input"
-                  type="text"
-                  id="username"
-                  name="username"
-                  placeholder="Enter your Registration Number"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="login__label">
-                  Password
-                </label>
-                <div className="login__box">
-                  <input
-                    className="login__input"
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  <i
-                    className={`${
-                      showPassword ? "ri-eye-line" : "ri-eye-off-line"
-                    } login__eye`}
-                    id="input-icon"
-                    onClick={togglePasswordVisibility}
-                  ></i>
-                </div>
-              </div>
             </div>
 
             <div>
               <div className="login__buttons">
-                <button className="login__button" type="submit">
-                  Log In
+                <button
+                  className="login__button"
+                  type="button"
+                  onClick={handleGoogleSignIn}
+                >
+                  <i
+                    className="ri-google-fill "
+                    id="input_icon"
+                    style={{ margin: "auto", padding: "10px", height: "5px" }}
+                  ></i>
+                  Log In With Google
                 </button>
               </div>
-
-              <button className="login__forgot">Update Password</button>
             </div>
           </form>
         </div>

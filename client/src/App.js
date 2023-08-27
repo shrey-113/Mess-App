@@ -1,12 +1,19 @@
+import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import IndexScreen from "./screens";
 import OrderScreen from "./screens/form";
-import UpdatePasswordScreen from "./screens/updatePassword";
+import AuthScreen from "./screens/auth";
+import { useAuth } from "./services/authContext";
 
 function App() {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="App">
-      <OrderScreen />
+      <Routes>
+        <Route path="/" element={<IndexScreen />} />
+        {isAuthenticated && <Route path="/order" element={<OrderScreen />} />}
+        <Route path="/session/oauth/google" element={<AuthScreen />} />
+      </Routes>
     </div>
   );
 }
