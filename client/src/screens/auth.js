@@ -1,8 +1,10 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom"; // Assuming you're using React Router for navigation
+import { authContext } from "../services/authContext";
 
 const AuthScreen = () => {
   const navigate = useNavigate();
+  const { login } = useContext(authContext);
 
   const [params] = useSearchParams();
 
@@ -29,13 +31,14 @@ const AuthScreen = () => {
       // Navigate to the appropriate screen in your app
       if (response.ok) {
         localStorage.setItem("token", data.token);
+        login();
         navigate("/order"); // For example, navigate to the dashboard after successful authentication
       }
     } else {
       // Handle error or user denied permission
       console.error("No authorization code found.");
     }
-  }, [authorizationCode, navigate]);
+  }, [authorizationCode, navigate, login]);
 
   useEffect(() => {
     try {
@@ -47,7 +50,9 @@ const AuthScreen = () => {
 
   return (
     <div>
-      <h1>Authenticating...</h1>
+      <h1 style={{ display: "flex", width: "100%", margin: "auto" }}>
+        Authenticating...
+      </h1>
     </div>
   );
 };

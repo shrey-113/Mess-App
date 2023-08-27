@@ -1,36 +1,33 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  useCallback,
-} from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 const authContext = createContext({
   isAuthenticated: false,
   token: null,
   type: "Student",
-  newToken: () => {},
   login: () => {},
   logout: () => {},
   setType: () => {},
 });
 
 const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(
-    () => localStorage.getItem("token") || null
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("isAuthenticated") === true
   );
-  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
-  const [type, setType] = useState("Student");
 
-  const newToken = useCallback((newTokenValue) => {
-    setToken(newTokenValue);
-    if (newTokenValue) {
-      localStorage.setItem("token", newTokenValue);
-    } else {
-      localStorage.removeItem("token");
-    }
-  }, []);
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [type, setType] = useState(localStorage.getItem("type") || "Student");
+
+  useEffect(() => {
+    localStorage.setItem("isAuthenticated", isAuthenticated);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    localStorage.setItem("token", token);
+  }, [token]);
+
+  useEffect(() => {
+    localStorage.setItem("type", type);
+  }, [type]);
 
   const login = () => {
     setIsAuthenticated(true);
@@ -38,7 +35,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setIsAuthenticated(false);
-    newToken(null);
+    setToken(null);
   };
 
   return (
@@ -47,7 +44,6 @@ const AuthProvider = ({ children }) => {
         isAuthenticated,
         token,
         type,
-        newToken,
         login,
         logout,
         setType,
@@ -58,8 +54,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-const useAuth = () => {
-  return useContext(authContext);
-};
-
-export { AuthProvider, useAuth };
+export { AuthProvider, authContext };

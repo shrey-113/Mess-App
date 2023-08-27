@@ -15,7 +15,11 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 const { authController } = require("./controllers/auth");
-const { order } = require("./controllers/order");
+const {
+  order,
+  getPreviousOrders,
+  getOrderTotalsByDateRange,
+} = require("./controllers/order");
 const { verifyAccessToken } = require("./middlewares/authorization");
 
 app.get("/test", async (req, res) => {
@@ -27,6 +31,10 @@ app.get("/test", async (req, res) => {
 app.post("/auth/google/exchange", authController);
 
 app.post("/order", verifyAccessToken, order);
+
+app.get("/user/getorders", verifyAccessToken, getPreviousOrders);
+
+app.get("/admin/generate", verifyAccessToken, getOrderTotalsByDateRange);
 
 app.listen(PORT, async () => {
   console.log(`Server listening on port ${PORT}`);

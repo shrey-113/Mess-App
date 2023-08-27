@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "../assets/css/styles.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { authContext } from "../services/authContext";
+import { useNavigate } from "react-router-dom";
 
 const OrderScreen = () => {
   const [milkQuantity, setMilkQuantity] = useState(0);
   const [curdQuantity, setCurdQuantity] = useState(0);
+  const navigate = useNavigate();
+
+  const { logout } = useContext(authContext);
 
   const apiurl = process.env.REACT_APP_API_URL;
   const token = localStorage.getItem("token");
@@ -59,8 +64,6 @@ const OrderScreen = () => {
       // Handle error here
     }
   };
-
-  const logout = () => {};
 
   return (
     <div className="container">
@@ -132,14 +135,23 @@ const OrderScreen = () => {
                 Submit
               </button>
             </div>
+            <button
+              className="order__button"
+              onClick={() => {
+                navigate("/orderhistory");
+              }}
+              style={{ margin: "0px auto" }}
+            >
+              Order History
+            </button>
+            <button
+              className="order__button"
+              onClick={logout}
+              style={{ margin: "0px auto" }}
+            >
+              Log Out
+            </button>
           </form>
-          <button
-            className="order__button"
-            onClick={logout}
-            style={{ marginTop: "0px" }}
-          >
-            Log Out
-          </button>
         </div>
       </div>
       <ToastContainer autoClose={5000} />
