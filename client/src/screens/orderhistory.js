@@ -33,6 +33,15 @@ const OrderHistory = () => {
   return (
     <div className="container">
       <div className="order-history">
+        <button
+          className="order__button"
+          onClick={() => {
+            navigate("/order");
+          }}
+          style={{ margin: "20px 50px" }}
+        >
+          Back
+        </button>
         <div className="order-history__content">
           <h1 className="order-history__title">Order History</h1>
 
@@ -55,15 +64,6 @@ const OrderHistory = () => {
             </div>
           ))}
         </div>
-        <button
-          className="order__button"
-          onClick={() => {
-            navigate("/order");
-          }}
-          style={{ margin: "0px auto" }}
-        >
-          Back
-        </button>
       </div>
       <ToastContainer autoClose={5000} />
     </div>

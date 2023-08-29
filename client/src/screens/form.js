@@ -54,7 +54,7 @@ const OrderScreen = () => {
       if (response.ok) {
         toast("Order placed successfully!");
       } else {
-        toast("Order placement failed!", {});
+        toast("Order placement failed!");
       }
 
       setMilkQuantity(0);

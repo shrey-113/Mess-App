@@ -19,6 +19,7 @@ const {
   order,
   getPreviousOrders,
   getOrderTotalsByDateRange,
+  getDailyMonthlyTotalQuantity,
 } = require("./controllers/order");
 const { verifyAccessToken } = require("./middlewares/authorization");
 
@@ -34,7 +35,9 @@ app.post("/order", verifyAccessToken, order);
 
 app.get("/user/getorders", verifyAccessToken, getPreviousOrders);
 
-app.get("/admin/generate", verifyAccessToken, getOrderTotalsByDateRange);
+app.post("/admin/generate", verifyAccessToken, getOrderTotalsByDateRange);
+
+app.get("/getdailyorders", getDailyMonthlyTotalQuantity);
 
 app.listen(PORT, async () => {
   console.log(`Server listening on port ${PORT}`);

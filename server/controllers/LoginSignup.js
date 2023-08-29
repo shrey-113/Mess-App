@@ -16,7 +16,13 @@ const login = async (email) => {
 
     const token = await encodeJWT(rollNo);
 
-    return token;
+    const res = await DB.query(
+      `select Role from Users where RegistrationNo = '${rollNo}'`
+    );
+
+    const role = res[0].Role;
+
+    return { token, role };
   } catch (error) {
     console.log(error);
   }
@@ -25,7 +31,7 @@ const login = async (email) => {
 const signup = async (name, email, photo) => {
   try {
     const rollNo = email.split("@")[0];
-    const response = DB.query(
+    const response = await DB.query(
       `Insert into Users values ('${rollNo}', '${name}', '${email}', '${photo}', 'Student')`
     );
 
@@ -35,7 +41,13 @@ const signup = async (name, email, photo) => {
 
     const token = await encodeJWT(rollNo);
 
-    return token;
+    const res = await DB.query(
+      `select Role from Users where RegistrationNo = '${rollNo}'`
+    );
+
+    const role = res[0].Role;
+
+    return { token, role };
   } catch (error) {
     console.log(error);
   }

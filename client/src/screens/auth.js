@@ -13,30 +13,33 @@ const AuthScreen = () => {
   const getAuthorizationCode = useCallback(async () => {
     const apiurl = process.env.REACT_APP_API_URL;
 
-    if (authorizationCode) {
-      console.log(authorizationCode);
+    try {
+      if (authorizationCode) {
+        // Now send the authorization code to your backend to exchange it for an access token
+        const response = await fetch(`${apiurl}/auth/google/exchange`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ code: authorizationCode }),
+        });
 
-      // Now send the authorization code to your backend to exchange it for an access token
-      const response = await fetch(`${apiurl}/auth/google/exchange`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code: authorizationCode }),
-      });
+        const data = await response.json();
 
-      const data = await response.json();
+        // Now you can handle storing the access token, user data, etc. in your app state
+        // Navigate to the appropriate screen in your app
+        if (response.ok) {
+          localStorage.setItem("token", data.token.token);
 
-      // Now you can handle storing the access token, user data, etc. in your app state
-      // Navigate to the appropriate screen in your app
-      if (response.ok) {
-        localStorage.setItem("token", data.token);
-        login();
-        navigate("/order"); // For example, navigate to the dashboard after successful authentication
+          login(data.token.role);
+          navigate("/order"); // For example, navigate to the dashboard after successful authentication
+        }
+      } else {
+        // Handle error or user denied permission
+        console.error("No authorization code found.");
       }
-    } else {
-      // Handle error or user denied permission
-      console.error("No authorization code found.");
+    } catch (error) {
+      console.log(error);
     }
   }, [authorizationCode, navigate, login]);
 

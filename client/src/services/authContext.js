@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 
 const authContext = createContext({
-  isAuthenticated: false,
+  isAuthenticated: localStorage.getItem("token") ? true : false,
   token: null,
   type: "Student",
   login: () => {},
@@ -29,8 +29,9 @@ const AuthProvider = ({ children }) => {
     localStorage.setItem("type", type);
   }, [type]);
 
-  const login = () => {
+  const login = (role) => {
     setIsAuthenticated(true);
+    setType(role);
   };
 
   const logout = () => {

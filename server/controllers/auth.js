@@ -7,15 +7,15 @@ const checkForLogin = async (name, email, photo) => {
     const existing = await DB.query(
       `Select Email from Users where Email = '${email}'`
     );
-    console.log(existing);
+
     if (existing.length > 0) {
       //login
-      const token = await login(email);
-      return token;
+      const { token, role } = await login(email);
+      return { token, role };
     } else {
       //signup
-      const token = await signup(name, email, photo);
-      return token;
+      const { token, role } = await signup(name, email, photo);
+      return { token, role };
     }
   } catch (error) {
     console.log(error);
