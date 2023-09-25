@@ -36,6 +36,9 @@ function App() {
           </>
         )}
 
+        <Route path="/admin/mess" element={<MessAdmin />} />
+        <Route path="/admin/management" element={<ManagementAdmin />} />
+
         <Route path="/session/oauth/google" element={<AuthScreen />} />
         <Route path="/*" element={<Navigate to="/" />} />
       </Routes>

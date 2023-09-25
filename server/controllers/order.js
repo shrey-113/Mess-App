@@ -170,9 +170,36 @@ const getDailyMonthlyTotalQuantity = async (req, res, next) => {
   }
 };
 
+const getRecentOrders = async (req, res, next) => {
+  const rollno = req.userId;
+
+  try {
+    const query = `
+      SELECT *
+      FROM Orders
+      ORDER BY Order_Date DESC, Order_Time DESC
+      LIMIT 30
+    `;
+
+    const orders = await DB.query(query, [rollno]);
+
+    const formattedOrders = orders.map((order) => ({
+      ...order,
+      Order_Date: order.Order_Date.toLocaleDateString().slice(0, 10), // Format date as YYYY-MM-DD
+      Order_Time: order.Order_Time, // Format time as HH:MM:SS
+    }));
+
+    return res.status(200).json({ orders: formattedOrders });
+  } catch (error) {
+    console.error("Error getting recent orders:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   order,
   getPreviousOrders,
   getOrderTotalsByDateRange,
   getDailyMonthlyTotalQuantity,
+  getRecentOrders,
 };

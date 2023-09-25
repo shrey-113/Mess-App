@@ -37,6 +37,15 @@ const OrderScreen = () => {
 
   const handleOrder = async (event) => {
     event.preventDefault();
+    const confirmed = window.confirm(
+      `Are you sure you want to place this order? \n Milk: ${milkQuantity} \n Curd: ${curdQuantity}`
+    );
+
+    if (!confirmed) {
+      // If user clicked "Cancel" on the confirmation popup
+      return;
+    }
+
     // Perform form submission logic here using milkQuantity and curdQuantity
     const data = { curdQuantity: curdQuantity, milkQuantity: milkQuantity };
     const headers = {
